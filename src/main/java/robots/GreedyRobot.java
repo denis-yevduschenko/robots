@@ -16,28 +16,20 @@ public class GreedyRobot extends Robot {
     public boolean takeTools() throws InterruptedException {
         if (getCharge() < 60){ //robots.abs.Robot takes instruments if charge < 60
             if (getCable().isFree()){
-                getCable().setFree(false);
-                setHaveCable(true);
-                log.info("\t\tRobot-"+ getRobotId() + " have cable = " + isHaveCable());
+                takeCable();
             }
             if (getFork().isFree()){
-                getFork().setFree(false);
-                setHaveFork(true);
-                log.info("\t\tRobot-"+ getRobotId() + " have fork = " + isHaveFork());
+                takeFork();
             }
             if (isHaveFork() && isHaveCable()){
                 return true;
             }
         }else{ //if charge > 60
             if (isHaveCable()){
-                getCable().setFree(true);
-                setHaveCable(false);
-                log.info("\t\tRobot-"+ getRobotId() + " have cable = " + isHaveCable());
+                setCableFree();
             }
             if (isHaveFork()){
-                getFork().setFree(true);
-                setHaveFork(false);
-                log.info("\t\tRobot-"+ getRobotId() + " have fork = " + isHaveFork());
+                setForkFree();
             }
             sleep(500);
         }
@@ -51,15 +43,11 @@ public class GreedyRobot extends Robot {
                 int tempCharge = getCharge() + 10;
                 setCharge(tempCharge);
             }
-            log.info("\t\trobots.abs.Robot-"+ getRobotId() + " increased the charge = " + getCharge());
+            log.info("\t\tRobot-"+ getRobotId() + " increased the charge = " + getCharge());
             sleep(500);
         }
-        getFork().setFree(true);
-        this.setHaveFork(false);
-        getCable().setFree(true);
-        this.setHaveCable(false);
-        log.info("\t\tRobot-"+ getRobotId() + " have cable = " + isHaveCable());
-        log.info("\t\tRobot-"+ getRobotId() + " have fork = " + isHaveFork());
+        setForkFree();
+        setCableFree();
     }
 
     @Override

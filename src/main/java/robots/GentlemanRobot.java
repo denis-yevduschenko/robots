@@ -46,15 +46,11 @@ public class GentlemanRobot extends Robot {
     //Check charges neighbors robots, if charge > neighbors's charge give them fork/cable
     public boolean checkChargeNeighbors() throws InterruptedException {
         if (isHaveFork() && neighborFork.getCharge() < getCharge() && !neighborFork.isStop()){
-            getFork().setFree(true);
-            setHaveFork(false);
-            log.info("\t\tRobot-"+ getRobotId() + " have fork = " + isHaveFork());
+            setForkFree();
             return true;
         }
         if (isHaveCable() && neighborCable.getCharge() < getCharge() && !neighborFork.isStop()){
-            getCable().setFree(true);
-            setHaveCable(false);
-            log.info("\t\tRobot-"+ getRobotId() + " have cable = " + isHaveCable());
+            setCableFree();
             return true;
         }
         return false;
@@ -65,15 +61,11 @@ public class GentlemanRobot extends Robot {
         if (checkChargeNeighbors()){
             sleep(200);
         }else{
-            if (getCable().isFree()) {      //if tools is free take them
-                getCable().setFree(false);
-                setHaveCable(true);
-                log.info("\t\tRobot-"+ getRobotId() + " have cable = " + isHaveCable());
+            if (getCable().isFree()) {
+                takeCable();
             }
-            if (getFork().isFree()) {       //if tools is free take them
-                getFork().setFree(false);
-                setHaveFork(true);
-                log.info("\t\tRobot-"+ getRobotId() + " have fork = " + isHaveFork());
+            if (getFork().isFree()) {
+                takeFork();
             }
             if (isHaveFork() && isHaveCable()) {
                 return true;
@@ -97,12 +89,8 @@ public class GentlemanRobot extends Robot {
             }
         }
         if (getCharge() == 100) {
-            getFork().setFree(true);
-            setHaveFork(false);
-            getCable().setFree(true);
-            setHaveCable(false);
-            log.info("\t\tRobot-"+ getRobotId() + " have cable = " + isHaveCable());
-            log.info("\t\tRobot-"+ getRobotId() + " have fork = " + isHaveFork());
+            setCableFree();
+            setForkFree();
         }
     }
 }

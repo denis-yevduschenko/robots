@@ -19,14 +19,10 @@ public class RandRobot extends Robot {
     public boolean takeTools() throws InterruptedException {
         if (getCharge() != 100) {
             if (getCable().isFree()) {
-                getCable().setFree(false);
-                setHaveCable(true);
-                log.info("\t\tRobot-"+ getRobotId() + " have cable = " + isHaveCable());
+                takeCable();
             }
             if (getFork().isFree()) {
-                getFork().setFree(false);
-                setHaveFork(true);
-                log.info("\t\tRobot-"+ getRobotId() + " have fork = " + isHaveFork());
+                takeFork();
             }
         }
         return isHaveFork() && isHaveCable();
@@ -40,12 +36,8 @@ public class RandRobot extends Robot {
         }
         log.info("\t\tRobot-"+ getRobotId() + " increased the charge = " + getCharge());
         sleep(500);
-        getFork().setFree(true);
-        setHaveFork(false);
-        getCable().setFree(true);
-        setHaveCable(false);
-        log.info("\t\tRobot-"+ getRobotId() + " have cable = " + isHaveCable());
-        log.info("\t\tRobot-"+ getRobotId() + " have fork = " + isHaveFork());
+        setForkFree();
+        setCableFree();
         sleep((random.nextInt(200)+100));
     }
 

@@ -10,15 +10,11 @@ public abstract class Robot extends Thread{
 
     private int charge = 50;
     private int robotId;
-    private long startTime = 1;
     private boolean haveCable = false;
     private boolean haveFork = false;
-
     private Cable cable;
     private Fork fork;
     private volatile boolean stopMe = false;
-
-
 
     public Robot() {
 
@@ -27,34 +23,7 @@ public abstract class Robot extends Thread{
     public Robot(int robotId) {
         this.robotId = robotId;
         this.setName("Robot-"+robotId);
-        log.info("\t\tRobot-"+ robotId + " was create.");
-    }
-
-    // Change charge every 1 second (-10%)
-    public void dischargeRobot() {
-        if (stopMe){
-            return;
-        }
-        if (charge == 0){
-            if (haveFork){
-                fork.setFree(true);
-                haveFork = false;
-                log.info("\t\tRobot-"+ getRobotId() + " have fork = " + isHaveFork());
-            }
-            if (haveCable){
-                cable.setFree(true);
-                haveCable = false;
-                log.info("\t\tRobot-"+ getRobotId() + " have cable = " + isHaveCable());
-            }
-            stopMe = true;
-            log.info("\t\tRobot-"+ getRobotId() + " stopped");
-            return;
-        }
-        synchronized (this) {
-            charge -= 10;
-        }
-        log.info("\t\tRobot-"+ robotId + " reduced the charge = " + getCharge());
-
+        log.info("\t\tRobot-"+ robotId + " created.");
     }
 
     @Override
@@ -68,11 +37,56 @@ public abstract class Robot extends Thread{
                 e.printStackTrace();
             }
         }
-        getFork().setFree(true);
-        this.setHaveFork(false);
-        getCable().setFree(true);
-        this.setHaveCable(false);
+        setForkFree();
+        setCableFree();
     }
+
+    // Change charge  (-10%)
+    public void dischargeRobot() {
+        if (stopMe){
+            return;
+        }
+        if (charge == 0){
+            if (haveFork){
+                setForkFree();
+            }
+            if (haveCable){
+                setCableFree();
+            }
+            stopMe = true;
+            log.info("\t\tRobot-"+ getRobotId() + " stopped");
+            return;
+        }
+        synchronized (this) {
+            charge -= 10;
+        }
+        log.info("\t\tRobot-"+ robotId + " reduced the charge = " + getCharge());
+    }
+
+    public void setCableFree(){
+        cable.setFree(true);
+        haveCable = false;
+        log.info("\t\tRobot-"+ getRobotId() + " have cable = " + isHaveCable());
+    }
+
+    public void setForkFree(){
+        fork.setFree(true);
+        haveFork = false;
+        log.info("\t\tRobot-"+ getRobotId() + " have fork = " + isHaveFork());
+    }
+
+    public void takeFork(){
+        fork.setFree(false);
+        haveFork = true;
+        log.info("\t\tRobot-"+ getRobotId() + " have fork = " + isHaveFork());
+    }
+
+    public void takeCable(){
+        cable.setFree(false);
+        haveCable = true;
+        log.info("\t\tRobot-"+ getRobotId() + " have cable = " + isHaveCable());
+    }
+
     // Can robot take instruments or not?
     public abstract boolean takeTools() throws InterruptedException;
     // Method increase charge
@@ -80,8 +94,14 @@ public abstract class Robot extends Thread{
 
     public abstract void setNeighbors(Robot[] robots);
 
+//    Getters and Setters
     public boolean isStop() {
         return stopMe;
+    }
+
+    public void setStopMe() {
+        this.stopMe = true;
+        log.info("\t\tRobot-"+ robotId + " stopped.");
     }
 
     public boolean isHaveFork() {
@@ -118,11 +138,6 @@ public abstract class Robot extends Thread{
 
     public void setCharge(int charge) {
         this.charge = charge;
-    }
-
-    public void setStopMe() {
-        this.stopMe = true;
-        log.info("\t\tRobot-"+ robotId + " stopped.");
     }
 
     public int getCharge() {

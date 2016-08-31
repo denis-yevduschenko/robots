@@ -12,10 +12,10 @@ public class Main {
     //settings in src/main/resources/log4j.properties
     public static Logger log = Logger.getLogger(Main.class.getName());
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws InterruptedException {
         Robot[] robots = new Robot[6];
 
-        init(robots, args);
+        prepareRobotToWork(robots, args);
 
         //Starting threads
         for (Robot robot : robots) {
@@ -23,7 +23,6 @@ public class Main {
         }
 
         //Main thread works until all robots will be stopped or will have 100%
-        int k = 2;
         while(true){
             if(checkEnd(robots)){
                 for (Robot robot : robots) {
@@ -49,16 +48,16 @@ public class Main {
                 + robots[3].getCharge() + "\t" + robots[4].getCharge() + "\t" + robots[5].getCharge());
     }
 
-    public static void init(Robot[] robots, String[] args) throws Exception {
+    public static void prepareRobotToWork(Robot[] robots, String[] args) {
+        try {
+            initRobots(robots, args);
+            addTools(robots);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-        Fork fork12 = new Fork();   //Fork for robot-1 and robot-2
-        Fork fork34 = new Fork();   //Fork for robot-3 and robot-4
-        Fork fork56 = new Fork();   //Fork for robot-5 and robot-6
-
-        Cable cable23 = new Cable();    //Cable for robot-2 and robot-3
-        Cable cable45 = new Cable();    //Cable for robot-4 and robot-5
-        Cable cable61 = new Cable();    //Cable for robot-6 and robot-1
-
+    private static void initRobots(Robot[] robots, String[] args) throws Exception {
         //Check incoming args and create robots with their strategy
         for (int i = 0; i < 6; i++) {
             int n = Integer.parseInt(args[i]);
@@ -74,7 +73,7 @@ public class Main {
                     break;
                 default:
                     log.error("\t\tWrong incoming argument: " + args[i]);
-                    throw new Exception("The parameter is incorrect. robots.abs.Robot isn't ready!");
+                    throw new Exception("The parameter is incorrect. Robot isn't ready!");
             }
         }
         //Set neighbors for gentleman robot
@@ -84,25 +83,46 @@ public class Main {
                 robots[i].setNeighbors(robots);
             }
         }
+    }
+
+    private static void addTools(Robot[] robots){
+
+        Fork fork01 = new Fork();   //Fork for robot-1 and robot-2
+        Fork fork23 = new Fork();   //Fork for robot-3 and robot-4
+        Fork fork45 = new Fork();   //Fork for robot-5 and robot-6
+
+        Cable cable12 = new Cable();    //Cable for robot-2 and robot-3
+        Cable cable34 = new Cable();    //Cable for robot-4 and robot-5
+        Cable cable50 = new Cable();    //Cable for robot-6 and robot-1
 
         //1 robot and his fork and cable which it can takeTools
-        robots[0].setFork(fork12);
-        robots[0].setCable(cable61);
+        robots[0].setFork(fork01);
+        robots[0].setCable(cable50);
         //2 robot and his fork and cable which it can takeTools
-        robots[1].setFork(fork12);
-        robots[1].setCable(cable23);
+        robots[1].setFork(fork01);
+        robots[1].setCable(cable12);
         //3 robot and his fork and cable which it can takeTools
-        robots[2].setFork(fork34);
-        robots[2].setCable(cable23);
+        robots[2].setFork(fork23);
+        robots[2].setCable(cable12);
         //4 robot and his fork and cable which it can takeTools
-        robots[3].setFork(fork34);
-        robots[3].setCable(cable45);
+        robots[3].setFork(fork23);
+        robots[3].setCable(cable34);
         //5 robot and his fork and cable which it can takeTools
-        robots[4].setFork(fork56);
-        robots[4].setCable(cable45);
+        robots[4].setFork(fork45);
+        robots[4].setCable(cable34);
         //6 robot and his fork and cable which it can takeTools
-        robots[5].setFork(fork56);
-        robots[5].setCable(cable61);
+        robots[5].setFork(fork45);
+        robots[5].setCable(cable50);
+    }
+
+    public static void currentState(Robot[] robots){
+        for (int i = 0; i < 6; i++) {
+            System.out.println("robot-" + robots[i].getRobotId() + "    cable:" + robots[i].isHaveCable() +
+                    "   fork:" + robots[i].isHaveFork());
+        }
+        System.out.println(robots[0].getCharge() + " " + robots[1].getCharge() + " " + robots[2].getCharge() + " "
+                + robots[3].getCharge() + " " + robots[4].getCharge() + " " + robots[5].getCharge());
+        System.out.println();
     }
 
     public static boolean checkEnd(Robot[] robots){
@@ -114,16 +134,6 @@ public class Main {
                 (robots[5].getCharge() == 100 || robots[5].isStop());
     }
 
-    public static void currentState(Robot[] robots){
-        System.out.println("robot-" + robots[0].getRobotId() + "    cable:" + robots[0].isHaveCable() + "   fork:" + robots[0].isHaveFork());
-        System.out.println("robot-" + robots[1].getRobotId() + "    cable:" + robots[1].isHaveCable() + "   fork:" + robots[1].isHaveFork());
-        System.out.println("robot-" + robots[2].getRobotId() + "    cable:" + robots[2].isHaveCable() + "   fork:" + robots[2].isHaveFork());
-        System.out.println("robot-" + robots[3].getRobotId() + "    cable:" + robots[3].isHaveCable() + "   fork:" + robots[3].isHaveFork());
-        System.out.println("robot-" + robots[4].getRobotId() + "    cable:" + robots[4].isHaveCable() + "   fork:" + robots[4].isHaveFork());
-        System.out.println("robot-" + robots[5].getRobotId() + "    cable:" + robots[5].isHaveCable() + "   fork:" + robots[5].isHaveFork());
-        System.out.println(robots[0].getCharge() + " " + robots[1].getCharge() + " " + robots[2].getCharge() + " "
-                + robots[3].getCharge() + " " + robots[4].getCharge() + " " + robots[5].getCharge());
-        System.out.println();
-    }
+
 
 }
