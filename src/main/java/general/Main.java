@@ -3,10 +3,10 @@ package general;
 import instruments.Cable;
 import instruments.Fork;
 import org.apache.log4j.Logger;
-import robots.GentlemanRobot;
-import robots.GreedyRobot;
-import robots.RandRobot;
-import robots.abs.Robot;
+import robots.Impl.GentlemanRobot;
+import robots.Impl.GreedyRobot;
+import robots.Impl.RandRobot;
+import robots.Robot;
 
 public class Main {
     //settings in src/main/resources/log4j.properties
@@ -117,8 +117,7 @@ public class Main {
 
     public static void currentState(Robot[] robots){
         for (int i = 0; i < 6; i++) {
-            System.out.println("robot-" + robots[i].getRobotId() + "    cable:" + robots[i].isHaveCable() +
-                    "   fork:" + robots[i].isHaveFork());
+            System.out.println(robots[i]);
         }
         System.out.println(robots[0].getCharge() + " " + robots[1].getCharge() + " " + robots[2].getCharge() + " "
                 + robots[3].getCharge() + " " + robots[4].getCharge() + " " + robots[5].getCharge());

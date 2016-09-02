@@ -3,10 +3,10 @@ import static org.junit.Assert.*;
 import instruments.Cable;
 import instruments.Fork;
 import org.junit.Test;
-import robots.GentlemanRobot;
-import robots.GreedyRobot;
-import robots.RandRobot;
-import robots.abs.Robot;
+import robots.Impl.GentlemanRobot;
+import robots.Impl.GreedyRobot;
+import robots.Impl.RandRobot;
+import robots.Robot;
 
 public class TestRobot {
     @Test

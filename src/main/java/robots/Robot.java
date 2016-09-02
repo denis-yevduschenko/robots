@@ -1,4 +1,4 @@
-package robots.abs;
+package robots;
 
 import instruments.Cable;
 import instruments.Fork;
@@ -85,6 +85,11 @@ public abstract class Robot extends Thread{
         cable.setFree(false);
         haveCable = true;
         log.info("\t\tRobot-"+ getRobotId() + " have cable = " + isHaveCable());
+    }
+
+    @Override
+    public String toString() {
+        return "robot-" + getRobotId() + "    cable:" + isHaveCable() + "   fork:" + isHaveFork();
     }
 
     // Can robot take instruments or not?

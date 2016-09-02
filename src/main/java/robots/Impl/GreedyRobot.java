@@ -1,7 +1,7 @@
-package robots;
+package robots.Impl;
 
 import org.apache.log4j.Logger;
-import robots.abs.Robot;
+import robots.Robot;
 
 public class GreedyRobot extends Robot {
     // settings in src/main/resources/log4j.properties
@@ -14,7 +14,7 @@ public class GreedyRobot extends Robot {
 
     @Override
     public boolean takeTools() throws InterruptedException {
-        if (getCharge() < 60){ //robots.abs.Robot takes instruments if charge < 60
+        if (getCharge() < 60){ //robots.Robot takes instruments if charge < 60
             if (getCable().isFree()){
                 takeCable();
             }

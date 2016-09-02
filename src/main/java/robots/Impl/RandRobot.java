@@ -1,7 +1,7 @@
-package robots;
+package robots.Impl;
 
 import org.apache.log4j.Logger;
-import robots.abs.Robot;
+import robots.Robot;
 
 import java.util.Random;
 
